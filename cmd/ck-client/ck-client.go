@@ -11,10 +11,10 @@ import (
 	"net"
 	"os"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 
-	"github.com/cbeuw/Cloak/internal/client"
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
+	"github.com/pangeavpn/cloak/client"
+	mux "github.com/pangeavpn/cloak/multiplex"
 	log "github.com/sirupsen/logrus"
 )
 

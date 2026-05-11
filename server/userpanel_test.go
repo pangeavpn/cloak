@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	"github.com/cbeuw/Cloak/internal/server/usermanager"
+	"github.com/pangeavpn/cloak/common"
+	"github.com/pangeavpn/cloak/server/usermanager"
 )
 
 func TestUserPanel_BypassUser(t *testing.T) {

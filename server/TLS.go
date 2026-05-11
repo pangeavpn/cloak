@@ -7,8 +7,8 @@ import (
 	"io"
 	"net"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	"github.com/cbeuw/Cloak/internal/ecdh"
+	"github.com/pangeavpn/cloak/common"
+	"github.com/pangeavpn/cloak/ecdh"
 
 	log "github.com/sirupsen/logrus"
 )

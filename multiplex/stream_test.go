@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cbeuw/connutil"

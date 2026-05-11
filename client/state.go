@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/cbeuw/Cloak/internal/ecdh"
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
+	"github.com/pangeavpn/cloak/ecdh"
+	mux "github.com/pangeavpn/cloak/multiplex"
 )
 
 // RawConfig represents the fields in the config json file

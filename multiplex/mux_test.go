@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	"github.com/cbeuw/connutil"
 	"github.com/stretchr/testify/assert"
 )

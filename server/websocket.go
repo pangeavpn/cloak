@@ -11,8 +11,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	"github.com/cbeuw/Cloak/internal/ecdh"
+	"github.com/pangeavpn/cloak/common"
+	"github.com/pangeavpn/cloak/ecdh"
 )
 
 type WebSocket struct{}

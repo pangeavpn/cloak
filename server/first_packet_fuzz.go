@@ -8,7 +8,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	"github.com/cbeuw/connutil"
 )
 

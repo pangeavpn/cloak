@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	"github.com/gorilla/websocket"
 
 	log "github.com/sirupsen/logrus"

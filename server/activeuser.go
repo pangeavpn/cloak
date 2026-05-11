@@ -3,9 +3,9 @@ package server
 import (
 	"sync"
 
-	"github.com/cbeuw/Cloak/internal/server/usermanager"
+	"github.com/pangeavpn/cloak/server/usermanager"
 
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
+	mux "github.com/pangeavpn/cloak/multiplex"
 )
 
 type ActiveUser struct {

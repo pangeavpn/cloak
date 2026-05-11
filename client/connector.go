@@ -6,9 +6,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
+	mux "github.com/pangeavpn/cloak/multiplex"
 	log "github.com/sirupsen/logrus"
 )
 

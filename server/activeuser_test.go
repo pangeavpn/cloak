@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
-	"github.com/cbeuw/Cloak/internal/server/usermanager"
+	"github.com/pangeavpn/cloak/common"
+	mux "github.com/pangeavpn/cloak/multiplex"
+	"github.com/pangeavpn/cloak/server/usermanager"
 )
 
 func getSeshConfig(unordered bool) mux.SessionConfig {

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	"github.com/gorilla/websocket"
 	utls "github.com/refraction-networking/utls"
 )

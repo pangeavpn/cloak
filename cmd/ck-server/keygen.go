@@ -4,8 +4,8 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	"github.com/cbeuw/Cloak/internal/ecdh"
+	"github.com/pangeavpn/cloak/common"
+	"github.com/pangeavpn/cloak/ecdh"
 )
 
 func generateUID() string {

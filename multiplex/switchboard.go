@@ -2,7 +2,7 @@ package multiplex
 
 import (
 	"errors"
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	log "github.com/sirupsen/logrus"
 	"math/rand/v2"
 	"net"

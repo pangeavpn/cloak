@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/client"
-	"github.com/cbeuw/Cloak/internal/common"
-	mux "github.com/cbeuw/Cloak/internal/multiplex"
-	"github.com/cbeuw/Cloak/internal/server"
+	"github.com/pangeavpn/cloak/client"
+	"github.com/pangeavpn/cloak/common"
+	mux "github.com/pangeavpn/cloak/multiplex"
+	"github.com/pangeavpn/cloak/server"
 	"github.com/cbeuw/connutil"
 	"github.com/stretchr/testify/assert"
 

@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/cbeuw/Cloak/internal/common"
+	"github.com/pangeavpn/cloak/common"
 	utls "github.com/refraction-networking/utls"
 	log "github.com/sirupsen/logrus"
 	"net"

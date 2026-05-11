@@ -1,4 +1,4 @@
-module github.com/cbeuw/Cloak
+module github.com/pangeavpn/cloak
 
 go 1.24.0
 

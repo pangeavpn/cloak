@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cbeuw/Cloak/internal/common"
-	"github.com/cbeuw/Cloak/internal/ecdh"
+	"github.com/pangeavpn/cloak/common"
+	"github.com/pangeavpn/cloak/ecdh"
 )
 
 func TestDecryptClientInfo(t *testing.T) {
