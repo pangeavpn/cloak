@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"io"
 	"net"
 	"sync"
@@ -12,12 +13,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func RouteUDP(bindFunc func() (*net.UDPConn, error), streamTimeout time.Duration, singleplex bool, newSeshFunc func() *mux.Session) {
+// RouteUDP reads UDP packets from localConn and routes them through Cloak
+// multiplexed streams. It returns nil when localConn is closed or when
+// newSeshFunc returns nil (signalling that the session has been cancelled).
+func RouteUDP(localConn *net.UDPConn, streamTimeout time.Duration, singleplex bool, newSeshFunc func() *mux.Session) error {
 	var sesh *mux.Session
-	localConn, err := bindFunc()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	streams := make(map[string]*mux.Stream)
 	var streamsMutex sync.Mutex
@@ -26,12 +26,20 @@ func RouteUDP(bindFunc func() (*net.UDPConn, error), streamTimeout time.Duration
 	for {
 		i, addr, err := localConn.ReadFrom(data)
 		if err != nil {
-			log.Errorf("Failed to read first packet from proxy client: %v", err)
+			if errors.Is(err, net.ErrClosed) {
+				log.Info("local UDP conn closed, stopping RouteUDP")
+				return nil
+			}
+			log.Errorf("Failed to read from proxy client: %v", err)
 			continue
 		}
 
 		if !singleplex && (sesh == nil || sesh.IsClosed()) {
 			sesh = newSeshFunc()
+			if sesh == nil {
+				log.Info("cloak session cancelled, stopping RouteUDP")
+				return nil
+			}
 		}
 
 		streamsMutex.Lock()
@@ -39,6 +47,11 @@ func RouteUDP(bindFunc func() (*net.UDPConn, error), streamTimeout time.Duration
 		if !ok {
 			if singleplex {
 				sesh = newSeshFunc()
+				if sesh == nil {
+					streamsMutex.Unlock()
+					log.Info("cloak session cancelled, stopping RouteUDP")
+					return nil
+				}
 			}
 
 			stream, err = sesh.OpenStream()

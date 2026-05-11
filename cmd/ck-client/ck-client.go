@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/binary"
 	"flag"
@@ -155,6 +156,7 @@ func main() {
 	var seshMaker func() *mux.Session
 
 	d := &net.Dialer{Control: protector, KeepAlive: remoteConfig.KeepAlive}
+	ctx := context.Background()
 
 	if adminUID != nil {
 		log.Infof("API base is %v", localConfig.LocalAddr)
@@ -163,7 +165,11 @@ func main() {
 		remoteConfig.NumConn = 1
 
 		seshMaker = func() *mux.Session {
-			return client.MakeSession(remoteConfig, authInfo, d)
+			sesh, err := client.MakeSession(ctx, remoteConfig, authInfo, d)
+			if err != nil {
+				log.Fatalf("MakeSession failed: %v", err)
+			}
+			return sesh
 		}
 	} else {
 		var network string
@@ -185,17 +191,27 @@ func main() {
 			quad := make([]byte, 4)
 			common.RandRead(authInfo.WorldState.Rand, quad)
 			authInfo.SessionId = binary.BigEndian.Uint32(quad)
-			return client.MakeSession(remoteConfig, authInfo, d)
+			sesh, err := client.MakeSession(ctx, remoteConfig, authInfo, d)
+			if err != nil {
+				log.Fatalf("MakeSession failed: %v", err)
+			}
+			return sesh
 		}
 	}
 
 	if authInfo.Unordered {
-		acceptor := func() (*net.UDPConn, error) {
-			udpAddr, _ := net.ResolveUDPAddr("udp", localConfig.LocalAddr)
-			return net.ListenUDP("udp", udpAddr)
+		udpAddr, err := net.ResolveUDPAddr("udp", localConfig.LocalAddr)
+		if err != nil {
+			log.Fatalf("ResolveUDPAddr(%q): %v", localConfig.LocalAddr, err)
+		}
+		localConn, err := net.ListenUDP("udp", udpAddr)
+		if err != nil {
+			log.Fatalf("ListenUDP(%v): %v", udpAddr, err)
 		}
 
-		client.RouteUDP(acceptor, localConfig.Timeout, remoteConfig.Singleplex, seshMaker)
+		if err := client.RouteUDP(localConn, localConfig.Timeout, remoteConfig.Singleplex, seshMaker); err != nil {
+			log.Errorf("RouteUDP exited: %v", err)
+		}
 	} else {
 		listener, err := net.Listen("tcp", localConfig.LocalAddr)
 		if err != nil {
