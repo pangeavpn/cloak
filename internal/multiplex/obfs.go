@@ -3,7 +3,6 @@ package multiplex
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -95,9 +94,12 @@ func (o *Obfuscator) obfuscate(f *Frame, buf []byte, payloadOffsetInBuf int) (in
 	header[13] = byte(padLen + tagLen)
 
 	// Random bytes for padding and nonce
-	_, err := rand.Read(buf[frameHeaderLength+payloadLen : usefulLen])
-	if err != nil {
-		return 0, fmt.Errorf("failed to pad random: %w", err)
+	randStart := frameHeaderLength + payloadLen
+	if o.payloadCipher != nil {
+		usefulRandEnd := randStart + padLen
+		common.FastRandRead(buf[randStart:usefulRandEnd])
+	} else {
+		common.FastRandRead(buf[randStart:usefulLen])
 	}
 
 	if o.payloadCipher != nil {

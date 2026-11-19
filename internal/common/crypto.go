@@ -7,6 +7,8 @@ import (
 	"errors"
 	"io"
 	"math/big"
+	mrand "math/rand/v2"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -47,6 +49,19 @@ func AESGCMDecrypt(nonce []byte, key []byte, ciphertext []byte) ([]byte, error) 
 		return nil, err
 	}
 	return plain, nil
+}
+
+var fastRandPool = sync.Pool{New: func() any {
+	var seed [32]byte
+	CryptoRandRead(seed[:])
+	return mrand.NewChaCha8(seed)
+}}
+
+// FastRandRead fills buf from a ChaCha8 stream seeded by crypto/rand, avoiding a getrandom syscall per call.
+func FastRandRead(buf []byte) {
+	r := fastRandPool.Get().(*mrand.ChaCha8)
+	r.Read(buf)
+	fastRandPool.Put(r)
 }
 
 func CryptoRandRead(buf []byte) {

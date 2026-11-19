@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bufio"
 	"encoding/binary"
 	"errors"
 	"io"
@@ -37,12 +38,23 @@ func AddRecordLayer(input []byte, typ byte, ver uint16) []byte {
 
 type TLSConn struct {
 	net.Conn
+	reader       io.Reader
 	writeBufPool sync.Pool
+}
+
+const serverReadBufSize = 16 << 10
+
+// NewBufferedTLSConn batches reads so a record header and body cost one syscall, not two.
+func NewBufferedTLSConn(conn net.Conn) *TLSConn {
+	c := NewTLSConn(conn)
+	c.reader = bufio.NewReaderSize(conn, serverReadBufSize)
+	return c
 }
 
 func NewTLSConn(conn net.Conn) *TLSConn {
 	return &TLSConn{
-		Conn: conn,
+		Conn:   conn,
+		reader: conn,
 		writeBufPool: sync.Pool{New: func() interface{} {
 			b := make([]byte, 0, initialWriteBufSize)
 			b = append(b, ApplicationData, byte(VersionTLS13>>8), byte(VersionTLS13&0xFF))
@@ -79,7 +91,7 @@ func (tls *TLSConn) Read(buffer []byte) (n int, err error) {
 	if len(buffer) < recordLayerLength {
 		return 0, io.ErrShortBuffer
 	}
-	_, err = io.ReadFull(tls.Conn, buffer[:recordLayerLength])
+	_, err = io.ReadFull(tls.reader, buffer[:recordLayerLength])
 	if err != nil {
 		return
 	}
@@ -90,7 +102,7 @@ func (tls *TLSConn) Read(buffer []byte) (n int, err error) {
 		return
 	}
 	// we overwrite the record layer here
-	return io.ReadFull(tls.Conn, buffer[:dataLength])
+	return io.ReadFull(tls.reader, buffer[:dataLength])
 }
 
 func (tls *TLSConn) Write(in []byte) (n int, err error) {
